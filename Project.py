@@ -4,6 +4,7 @@ import time
 import os
 import webbrowser
 import urllib
+import commands
 
 option='''
 Press 1 : To display current date and time
@@ -67,17 +68,21 @@ while choice!='0':
 	elif choice=='8':
 		print 8
 	elif choice=='9':
-		createfile=os.system('w | tail -2 >>ip.txt')
+		w_output_line=commands.getstatusoutput('w | wc -l')
+		w_output_line=str(int(w_output_line[1])-3)
+		createfile=os.system("w | tail -"+w_output_line+" >>ip.txt")
 		f=open('ip.txt','r')
 		messege=f.read()
 		ip=messege.split()
 		i=0
 		ip_variable_range=len(ip)
-		print "Connected IPs in your PC....."
-		os.system('echo connected ip in your pc | festival --tts')
-		while i < ip_variable_range:
-			print ip[i+2]
-			i=i+8
+		if ip:
+      	   	      print "Connected IPs to your PC....."
+       	       	      while i  < ip_variable_range:
+		             print ip[i+2]
+		             i=i+8
+   		else :
+	       	      print "No IP is connected to your PC......"
 		delfile=os.system('rm -f ip.txt')
 	elif choice=='0':
 		print "Thanks For Using"
