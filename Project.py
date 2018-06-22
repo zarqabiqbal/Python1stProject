@@ -1,5 +1,9 @@
 #!/usr/bin/python2
-
+from selenium import webdriver
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.common.by import By
 import time
 import os
 import webbrowser
@@ -76,26 +80,30 @@ while choice!='0':
 		except :
   			print "Not connected"
 	elif choice=='8':
-		
+		target = str(input('Enter name of person/group you want to send message to:'))
 
-		driver = webdriver.Chrome('/usr/local/bin/chromedriver')
-		driver.get('https://web.whatsapp.com/')
+		string = str(input('Enter your message: '))
 
-		name = input('Enter the name of user or group : ')
-		msg = input('Enter your message : ')
-		count = int(input('Enter the count : '))
+		n = int(input('Enter number of times you want your message to be sent: '))
+                #load the chrome driver
+		driver = webdriver.Chrome('/usr/local/share/chromedriver')
+    
+		driver.get("https://web.whatsapp.com/")
+		wait = WebDriverWait(driver, 600)
+ 
+		x_arg = '//span[contains(@title, '+ '"' +target + '"'+ ')]'
+		print(x_arg)
+		person_title = wait.until(EC.presence_of_element_located((
+    		By.XPATH, x_arg)))
+		print(person_title)
+		person_title.click()
+		inp_xpath = '//div[@class="_2S1VP copyable-text selectable-text"]'
+		input_box = wait.until(EC.presence_of_element_located((
+   		By.XPATH, inp_xpath)))
 
-		input('Enter anything after scanning QR code')
-
-		user = driver.find_element_by_xpath('//span[@title = "{}"]'.format(name))
-		user.click()
-
-		msg_box = driver.find_element_by_class_name('_2S1VP')
-
-		for i in range(count):
- 		   msg_box.send_keys(msg)
-  		   button = driver.find_element_by_class_name('_2lkdt')
-		   button.click()
+		for i in range(n):
+   			 input_box.send_keys(string + Keys.ENTER)
+   			 time.sleep(1)
 	elif choice=='9	':
                 #count the number of line in w command and store in variable w_output_line
 		w_output_line=commands.getstatusoutput('w | wc -l')
