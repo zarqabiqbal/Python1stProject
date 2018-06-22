@@ -5,6 +5,7 @@ import os
 import webbrowser
 import urllib
 import commands
+from selenium import webdriver
 
 option='''
 Press 1 : To display current date and time
@@ -75,9 +76,28 @@ while choice!='0':
 		except :
   			print "Not connected"
 	elif choice=='8':
-		print 8
-	elif choice=='9':
-		#count the number of line in w command and store in variable w_output_line
+		
+
+		driver = webdriver.Chrome('/usr/local/bin/chromedriver')
+		driver.get('https://web.whatsapp.com/')
+
+		name = input('Enter the name of user or group : ')
+		msg = input('Enter your message : ')
+		count = int(input('Enter the count : '))
+
+		input('Enter anything after scanning QR code')
+
+		user = driver.find_element_by_xpath('//span[@title = "{}"]'.format(name))
+		user.click()
+
+		msg_box = driver.find_element_by_class_name('_2S1VP')
+
+		for i in range(count):
+ 		   msg_box.send_keys(msg)
+  		   button = driver.find_element_by_class_name('_2lkdt')
+		   button.click()
+	elif choice=='9	':
+                #count the number of line in w command and store in variable w_output_line
 		w_output_line=commands.getstatusoutput('w | wc -l')
 		w_output_line=str(int(w_output_line[1])-3)
 		#store the output of the command in ip.txt file
@@ -101,6 +121,7 @@ while choice!='0':
 	       	      print "No IP is connected to your PC......"
 		#del the file ip.txt which is created previously for storing some output
 		delfile=os.system('rm -f ip.txt')
+	
 	elif choice=='0':
 		print "Thanks For Using"
 		os.system('echo "thanks for using" | festival --tts')
